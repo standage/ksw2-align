@@ -49,12 +49,23 @@ std::string align_call(const char *target, const char *query)
      */
     char cigar[512];
     size_t ci = 0;
+    size_t tlen = strlen(target);
+    size_t qlen = strlen(query);
 
     uint8_t score_match = 1;
     uint8_t penalty_mismatch = 2;
     uint8_t penalty_gapopen = 5;
     uint8_t penalty_gap_extend = 0;
     uint8_t alphabet_size = 5;
+
+    uint8_t *ti = (uint8_t *)calloc(strlen(target), 1);
+    for (int i = 0; i < tlen; i++) {
+        ti[i] = seq_nt4_table[(uint8_t)target[i]];
+    }
+    uint8_t *qi = (uint8_t *)calloc(strlen(query), 1);
+    for (int i = 0; i < qlen; i++) {
+        qi[i] = seq_nt4_table[(uint8_t)query[i]];
+    }
 
     int8_t matrix[25];
     ksw_extz_t ez;
@@ -64,8 +75,8 @@ std::string align_call(const char *target, const char *query)
 
     ksw_extz(
         NULL, // memory pool
-        strlen(query), (const uint8_t *)query,
-        strlen(target), (const uint8_t *)target,
+        qlen, qi,
+        tlen, ti,
         alphabet_size, matrix, penalty_gapopen, penalty_gap_extend,
         -1, // bandwidth
         -1, // zdrop
@@ -81,5 +92,7 @@ std::string align_call(const char *target, const char *query)
     }
 
     std::string cigarstring(cigar);
+    free(qi);
+    free(ti);
     return cigarstring;
 }
