@@ -1,13 +1,14 @@
 #include <iostream>
 #include <string>
 
-std::string align_call(const char *target, const char *query);
+std::string align(const char *target, const char *query, int match,
+                  int mismatch, int gapopen, int gapextend);
 
 int main()
 {
     const char *target = "TAAATAAATATCTGGTGTTTGAGGCAAAAAGGCAGACTTAAATTCTAAATCACACCTGTGCTTCCAGCACTACCTTCAAGCGCAGGTTCGAGCCAGTCAGGCAGGGTACATAAGAGTCCATTGTGCCTGTATTATTTTGAGCAATGGCTAAAGTACCTTCACCCTTGCTCACTGCTCCCCCACTTCCTCAAGTCTCATCGTGTTTTTTTTAGAGCTAGTTTCTTAGTCTCATTAGGCTTCAGTCACCAT";
     const char *query = "TCTGGTGTTTGAGGCAAAAAGGCAGACTTAAATTCTAAATCACACCTGTGCTTCCAGCACTACCTTCAAGCGCAGGTTCGAGCCAGTCAGGACTGCTCCCCCACTTCCTCAAGTCTCATCGTGTTTTTTTTAGAGCTAGTTTCTTAGTCTCATTAGGCTTCAGTCACCATCATTTCTTATAGGAATACCA";
 
-    std::string cigar = align_call(target, query);
+    std::string cigar = align(target, query, 2, 1, 5, 0);
     std::cout << '"' << cigar << '"' << '\n';
 }
